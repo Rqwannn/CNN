@@ -108,7 +108,7 @@ CNN.fit(train_set, epochs=EPOCS, validation_data=test_set, verbose=1)
 
 # Making a single prediction
 
-PATH = "assets/dataset/single_prediction/cat_or_dog_3.jpg"
+PATH = "assets/dataset/single_prediction/cat_or_dog_1.jpg"
 
 test_image = load_img(PATH, target_size=(64, 64))
 
@@ -117,14 +117,22 @@ print("\nTest Image : ", test_image)
 test_image = img_to_array(test_image)
 test_image = np.expand_dims(test_image, axis=0)
 
-result = CNN.predict(test_image, batch_size=10)
+images = np.vstack([test_image])
+result = CNN.predict(images, batch_size=10)
 
-train_set.class_indices
+# train_set.class_indices
 
 # 0 => CAT
 # 1 => DOG
 
-if result[0][0] == 1:
+# if result[0][0] == 1:
+#     prediction = "DOG"
+# else:
+#     prediction = "CAT"
+
+print(result)
+
+if result == 1:
     prediction = "DOG"
 else:
     prediction = "CAT"
