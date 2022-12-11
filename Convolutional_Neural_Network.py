@@ -10,11 +10,14 @@ from keras.utils import load_img, img_to_array
 # shear_range => Shearing image skala 0.2
 # zoom_range => Zooming image dengan range 0.2
 
+BATCH = 32 # Batch => 200 with 50 epoch higher accuracy but not ideal hehehhe
+
 train_datagen = ImageDataGenerator(
     rescale=1./255,
     shear_range=0.2,
     zoom_range=0.2,
-    horizontal_flip=True
+    horizontal_flip=True,
+    fill_mode='nearest'
 )
 
 # target_size => ukuran gambar (64,64) => 64 x 64
@@ -22,12 +25,16 @@ train_datagen = ImageDataGenerator(
 train_set = train_datagen.flow_from_directory(
     "assets/dataset/training_set",
     target_size=(64,64),
-    batch_size=32,
+    batch_size=BATCH,
     class_mode="binary"
 )
 
 test_datagen = ImageDataGenerator(
     rescale=1./255,
+    shear_range=0.2,
+    zoom_range=0.2,
+    horizontal_flip=True,
+    fill_mode='nearest'
 )
 
 # target_size => ukuran gambar (64,64) => 64 x 64
@@ -35,7 +42,7 @@ test_datagen = ImageDataGenerator(
 test_set = test_datagen.flow_from_directory(
     "assets/dataset/test_set",
     target_size=(64,64),
-    batch_size=32,
+    batch_size=BATCH,
     class_mode="binary"
 )
 
@@ -104,11 +111,11 @@ EPOCS = 25
 # validation_data => kaya langsung di evaluate kalo di cnn
 
 CNN.compile(optimizer="adam", loss='binary_crossentropy', metrics=['accuracy'])
-CNN.fit(train_set, epochs=EPOCS, validation_data=test_set, verbose=1)
+CNN.fit(train_set, epochs=EPOCS, validation_data=test_set, validation_steps=6, verbose=1)
 
 # Making a single prediction
 
-PATH = "assets/dataset/single_prediction/cat_or_dog_1.jpg"
+PATH = "assets/dataset/single_prediction/cat_or_dog_3.jpg"
 
 test_image = load_img(PATH, target_size=(64, 64))
 
